@@ -14,7 +14,9 @@ $ make && ./a.out
 ```bash
 $ ./a.out DataSize Mode
 ```
-## Result (RX9070XT)
+## Results (RX9070XT)
+
+### default
 
 ```bash
 yuk-to@Deneb ~/flat_load_dwordx4_sample % rocm-smi
@@ -42,4 +44,31 @@ mode 3
 1: f29e792b != 7c24
 1: 6f7149d2 != 0
 1: 7c18844b != 1
+```
+
+### Illegal Memory Access
+
+```
+yuk_to@Deneb ~/flat_load_dwordx4_sample % ./a.out 15 3 2&>1|head
+0: d94c1dc8 != 69200000
+0: d046cef5 != 7988
+0: 2dcc1f8c != bbda16ed
+0: 97630a85 != 0
+1: deabf77 != 69200010
+1: 1c699980 != 7988
+1: 5c8dc89c != bbda16ed
+1: d1908a9b != 0
+2: 4680acc7 != 69200020
+2: ed3876cb != 7988
+yuk_to@Deneb ~/flat_load_dwordx4_sample % ./a.out 16 3 2&>1|head
+Kernel Name: _Z16read_inst_kernelPK15HIP_vector_typeIjLj4EEPS0_mm
+VGPU=0x4b2a80 SWq=0x7ae4f8970000, HWq=0x7ae4f5700000, id=1
+        Dispatch Header =0xd02 (type=2, barrier=1, acquire=2, release=1), setup=0
+        grid=[1, 1, 1], workgroup=[1, 1, 1]
+        private_seg_size=0, group_seg_size=0
+        kernel_obj=0x7ae4f8940680, kernarg_address=0x0x7ae4f5200100
+        completion_signal=0x0, correlation_id=0
+        rptr=1, wptr=3
+ 104: an illegal memory access was encountered
+107: an illegal memory access was encountered
 ```
